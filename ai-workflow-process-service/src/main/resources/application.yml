@@ -1,0 +1,198 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: ai-workflow-process-service
+  
+  profiles:
+    active: dev
+  
+  # 响应式数据库配置
+  r2dbc:
+    url: r2dbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:ai_workflow}?useSSL=false&serverTimezone=Asia/Shanghai
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:root123}
+    pool:
+      initial-size: 10
+      max-size: 20
+      max-idle-time: 30m
+      validation-query: SELECT 1
+  
+  # Redis配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 6000ms
+      lettuce:
+        pool:
+          max-active: 10
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+  
+  # Kafka配置
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      batch-size: 16384
+      linger-ms: 5
+    consumer:
+      group-id: ai-workflow-process-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: "com.aiworkflow.*"
+  
+  # JSON配置
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,loggers
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  health:
+    redis:
+      enabled: true
+    db:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5,0.9,0.95,0.99
+    tags:
+      application: ${spring.application.name}
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.aiworkflow: DEBUG
+    org.springframework.r2dbc: DEBUG
+    org.springframework.kafka: INFO
+    reactor.netty: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}] - %msg%n"
+  file:
+    name: logs/ai-workflow-process-service.log
+    max-size: 100MB
+    max-history: 30
+
+# 业务配置
+aiworkflow:
+  process:
+    # 流程实例配置
+    instance:
+      max-concurrent: 1000
+      default-timeout: 3600000  # 1小时，单位毫秒
+      cleanup-interval: 300000   # 5分钟，单位毫秒
+    
+    # 任务配置
+    task:
+      default-priority: 0
+      max-retry-count: 3
+      retry-delay: 5000  # 5秒，单位毫秒
+    
+    # 事件配置
+    event:
+      batch-size: 100
+      publish-timeout: 5000  # 5秒，单位毫秒
+      max-retry: 3
+
+# Resilience4j配置
+resilience4j:
+  circuitbreaker:
+    instances:
+      process-service:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        minimum-number-of-calls: 5
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+  
+  retry:
+    instances:
+      process-service:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+  
+  timelimiter:
+    instances:
+      process-service:
+        timeout-duration: 30s
+
+---
+# 开发环境配置
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/ai_workflow_dev?useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: root123
+
+logging:
+  level:
+    com.aiworkflow: DEBUG
+    org.springframework.r2dbc: DEBUG
+
+---
+# 测试环境配置
+spring:
+  config:
+    activate:
+      on-profile: test
+  
+  r2dbc:
+    url: r2dbc:mysql://mysql-test:3306/ai_workflow_test?useSSL=false&serverTimezone=Asia/Shanghai
+    username: test_user
+    password: test_password
+
+---
+# 生产环境配置
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  r2dbc:
+    url: r2dbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?useSSL=true&serverTimezone=Asia/Shanghai
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+logging:
+  level:
+    com.aiworkflow: INFO
+    org.springframework.r2dbc: WARN
