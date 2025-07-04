@@ -1,0 +1,116 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: ai-workflow-engine
+    
+  datasource:
+    url: jdbc:mysql://localhost:3306/ai_workflow?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        
+  redis:
+    host: localhost
+    port: 6379
+    password: 
+    database: 0
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 20
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 5
+        
+  jackson:
+    default-property-inclusion: NON_NULL
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+# 线程池配置
+task:
+  execution:
+    pool:
+      core-size: 10
+      max-size: 50
+      queue-capacity: 100
+      keep-alive: 60s
+      thread-name-prefix: "workflow-task-"
+      
+# 工作流引擎配置
+workflow:
+  engine:
+    # 任务超时时间（毫秒）
+    task-timeout: 300000
+    # 最大重试次数
+    max-retries: 3
+    # Agent心跳超时时间（秒）
+    agent-heartbeat-timeout: 120
+    # 任务队列容量
+    task-queue-capacity: 1000
+    
+# MCP配置
+mcp:
+  enabled: true
+  connection-timeout: 30000
+  read-timeout: 60000
+  # 默认模型配置
+  default-model:
+    temperature: 0.7
+    max-tokens: 2048
+    
+# 日志配置
+logging:
+  level:
+    com.aiworkflow: DEBUG
+    org.springframework.data: INFO
+    org.hibernate: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+  file:
+    name: logs/ai-workflow.log
+    max-size: 100MB
+    max-history: 30
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# OpenAPI文档配置
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
