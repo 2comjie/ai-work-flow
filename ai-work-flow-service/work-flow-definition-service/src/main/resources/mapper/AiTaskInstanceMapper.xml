@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aiworkflow.service.definition.mapper.AiTaskInstanceMapper">
+
+    <resultMap id="BaseResultMap" type="com.aiworkflow.service.definition.entity.AiTaskInstance">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="flow_instance_id" property="flowInstanceId" jdbcType="BIGINT"/>
+        <result column="execution_id" property="executionId" jdbcType="BIGINT"/>
+        <result column="task_key" property="taskKey" jdbcType="VARCHAR"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="task_type" property="taskType" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="input_data" property="inputData" jdbcType="OTHER" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="output_data" property="outputData" jdbcType="OTHER" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="config_data" property="configData" jdbcType="OTHER" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="rollback_data" property="rollbackData" jdbcType="OTHER" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="error_info" property="errorInfo" jdbcType="OTHER" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+</mapper> 

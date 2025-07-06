@@ -1,0 +1,35 @@
+ ██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗███████╗██╗      ██████╗ ██╗    ██╗
+ ██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝██╔════╝██║     ██╔═══██╗██║    ██║
+ ██║ █╗ ██║██║   ██║██████╔╝█████╔╝ █████╗  ██║     ██║   ██║██║ █╗ ██║
+ ██║███╗██║██║   ██║██╔══██╗██╔═██╗ ██╔══╝  ██║     ██║   ██║██║███╗██║
+ ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗██║     ███████╗╚██████╔╝╚███╔███╔╝
+  ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
+
+ ██████╗ ███████╗███████╗██╗███╗   ██╗██╗████████╗██╗ ██████╗ ███╗   ██╗
+ ██╔══██╗██╔════╝██╔════╝██║████╗  ██║██║╚══██╔══╝██║██╔═══██╗████╗  ██║
+ ██║  ██║█████╗  █████╗  ██║██╔██╗ ██║██║   ██║   ██║██║   ██║██╔██╗ ██║
+ ██║  ██║██╔══╝  ██╔══╝  ██║██║╚██╗██║██║   ██║   ██║██║   ██║██║╚██╗██║
+ ██████╔╝███████╗██║     ██║██║ ╚████║██║   ██║   ██║╚██████╔╝██║ ╚████║
+ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║                    🔄 WORKFLOW DEFINITION SERVICE 🔄              ║
+  ║                                                                   ║
+  ║  ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐              ║
+  ║  │START│───▶│ AI  │───▶│HUMAN│───▶│ MCP │───▶│ END │              ║
+  ║  │     │    │AGENT│    │TASK │    │TOOL │    │     │              ║
+  ║  └─────┘    └─────┘    └─────┘    └─────┘    └─────┘              ║
+  ║                                                                   ║
+  ║  ✨ XML Workflow Definition & Validation                          ║
+  ║  🔍 DAG Cycle Detection & Connectivity Check                      ║
+  ║  🤖 Multi-Agent Support (LLM, MCP, Human Tasks)                   ║
+  ║  📊 Workflow Instance & Task Management                           ║
+  ║  🛡️  Comprehensive Validation & Business Logic                    ║
+  ║  🗄️  PostgreSQL + HikariCP Connection Pool                        ║
+  ║  ☁️  Nacos Service Discovery & Configuration                      ║
+  ║                                                                   ║
+  ║  Powered by Spring Boot + MyBatis Plus + Jackson XML             ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+
+  ${AnsiColor.BRIGHT_BLUE}:: Workflow Definition Service ::${AnsiColor.DEFAULT}  ${AnsiColor.BRIGHT_GREEN}(v1.0.0)${AnsiColor.DEFAULT}
+  ${AnsiColor.BRIGHT_YELLOW}:: Running on Port 8081 ::${AnsiColor.DEFAULT}  ${AnsiColor.BRIGHT_MAGENTA}:: Environment: ${spring.profiles.active} ::${AnsiColor.DEFAULT}

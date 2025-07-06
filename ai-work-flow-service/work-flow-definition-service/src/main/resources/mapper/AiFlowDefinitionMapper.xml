@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aiworkflow.service.definition.mapper.AiFlowDefinitionMapper">
+
+    <resultMap id="BaseResultMap" type="com.aiworkflow.service.definition.entity.AiFlowDefinition">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="flow_key" property="flowKey" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="flow_model" property="flowModel" jdbcType="OTHER" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="LONGVARCHAR"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+</mapper>

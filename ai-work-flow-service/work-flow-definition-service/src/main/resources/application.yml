@@ -1,0 +1,59 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: definition-service
+  profiles:
+    active: dev  # 设置默认激活开发环境配置
+
+# MyBatis Plus 配置
+mybatis-plus:
+  configuration:
+    # 开启驼峰命名转换
+    map-underscore-to-camel-case: true
+    # 关闭SQL日志（生产环境）
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.aiworkflow.service.definition.entity
+  # mapper xml 文件扫描
+  mapper-locations: classpath:mapper/*.xml
+  # 全局配置
+  global-config:
+    db-config:
+      # 主键类型
+      id-type: auto
+      # 逻辑删除配置
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    # 关闭MyBatis Plus Banner
+    banner: false
+
+# 简化日志配置
+logging:
+  level:
+    # 根日志级别设为INFO
+    root: info
+    # 只显示应用相关的重要日志
+    com.aiworkflow.service.definition: info
+    # 关闭Spring框架详细日志
+    org.springframework: warn
+    # 关闭Spring Boot详细日志
+    org.springframework.boot: warn
+    # 关闭Spring Cloud详细日志
+    org.springframework.cloud: warn
+    # 关闭Nacos详细日志
+    com.alibaba.nacos: warn
+    # 关闭HikariCP详细日志
+    com.zaxxer.hikari: warn
+    # 关闭MyBatis详细日志
+    com.baomidou.mybatisplus: warn
+    # 关闭Tomcat详细日志
+    org.apache.catalina: warn
+    org.apache.tomcat: warn
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# 关闭调试模式
+debug: true

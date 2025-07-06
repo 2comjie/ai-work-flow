@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开始节点配置</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        /* 左侧节点预览 */
+        .node-preview {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .node-preview h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .start-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .start-node:hover {
+            transform: scale(1.05);
+        }
+
+        .start-node::before {
+            content: "▶";
+            color: white;
+            font-size: 24px;
+            margin-left: 3px;
+        }
+
+        .node-info {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .node-info .node-type {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .node-info .node-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .node-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .status-ready {
+            background: #e8f5e8;
+            color: #4CAF50;
+        }
+
+        .status-running {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* 右侧配置面板 */
+        .config-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-panel h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        .form-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h4 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .dynamic-list {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .dynamic-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .dynamic-item input,
+        .dynamic-item select {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+        }
+
+        .btn-secondary {
+            background: #f1f1f1;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .json-preview {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .json-preview h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .json-preview pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: #4CAF50;
+            border-bottom-color: #4CAF50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 左侧节点预览 -->
+        <div class="node-preview">
+            <h3>开始节点</h3>
+            <div class="start-node" id="startNode"></div>
+            <div class="node-info">
+                <div class="node-type">START_EVENT</div>
+                <div class="node-name" id="nodeName">开始事件</div>
+                <span class="node-status status-ready" id="nodeStatus">就绪</span>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h4>节点属性</h4>
+                <div style="font-size: 12px; color: #666; margin-top: 10px;">
+                    <div>输入端口: 0</div>
+                    <div>输出端口: 1</div>
+                    <div>类型: 事件节点</div>
+                    <div>功能: 流程启动</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧配置面板 -->
+        <div class="config-panel">
+            <h2>开始节点配置</h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('trigger')">触发方式</button>
+                <button class="tab" onclick="showTab('input')">输入配置</button>
+                <button class="tab" onclick="showTab('variables')">变量设置</button>
+                <button class="tab" onclick="showTab('validation')">验证规则</button>
+            </div>
+
+            <!-- 触发方式 -->
+            <div id="trigger" class="tab-content active">
+                <div class="form-group">
+                    <label for="triggerType">触发类型</label>
+                    <select id="triggerType" onchange="updateTriggerConfig()">
+                        <option value="MANUAL">手动触发</option>
+                        <option value="API">API调用</option>
+                        <option value="SCHEDULED">定时触发</option>
+                        <option value="WEBHOOK">Webhook</option>
+                    </select>
+                </div>
+
+                <div id="scheduleConfig" style="display: none;">
+                    <div class="form-group">
+                        <label for="scheduleExpression">定时表达式</label>
+                        <input type="text" id="scheduleExpression" placeholder="0 0 8 * * ?">
+                        <div class="help-text">Cron格式，例如：0 0 8 * * ? (每天8点)</div>
+                    </div>
+                </div>
+
+                <div id="webhookConfig" style="display: none;">
+                    <div class="form-group">
+                        <label for="webhookUrl">Webhook URL</label>
+                        <input type="text" id="webhookUrl" placeholder="https://api.example.com/webhook">
+                    </div>
+                    <div class="form-group">
+                        <label for="webhookMethod">请求方法</label>
+                        <select id="webhookMethod">
+                            <option value="POST">POST</option>
+                            <option value="GET">GET</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入配置 -->
+            <div id="input" class="tab-content">
+                <div class="form-group">
+                    <label>支持的输入类型</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="supportText" checked>
+                        <label for="supportText">文本</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="supportJson" checked>
+                        <label for="supportJson">JSON</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="supportFile" checked>
+                        <label for="supportFile">文件</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxInputSize">最大输入大小(MB)</label>
+                    <input type="number" id="maxInputSize" value="1" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>必需字段</label>
+                    <div id="requiredFields">
+                        <!-- 动态添加必需字段 -->
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small" onclick="addRequiredField()">+
+                        添加字段</button>
+                </div>
+            </div>
+
+            <!-- 变量设置 -->
+            <div id="variables" class="tab-content">
+                <div class="form-section">
+                    <h4>系统变量</h4>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="includeTimestamp" checked>
+                        <label for="includeTimestamp">包含时间戳</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="includeUserId" checked>
+                        <label for="includeUserId">包含用户ID</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="includeFlowId" checked>
+                        <label for="includeFlowId">包含流程ID</label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>默认变量</h4>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="priority">优先级</label>
+                            <select id="priority">
+                                <option value="low">低</option>
+                                <option value="normal" selected>普通</option>
+                                <option value="high">高</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timeout">超时时间(秒)</label>
+                            <input type="number" id="timeout" value="3600">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 验证规则 -->
+            <div id="validation" class="tab-content">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="validationEnabled" checked>
+                    <label for="validationEnabled">启用验证</label>
+                </div>
+
+                <div id="validationRules">
+                    <!-- 动态添加验证规则 -->
+                </div>
+                <button type="button" class="btn btn-secondary btn-small" onclick="addValidationRule()">+ 添加规则</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTriggerConfig() {
+            const triggerType = document.getElementById('triggerType').value;
+
+            // 隐藏所有配置
+            document.getElementById('scheduleConfig').style.display = 'none';
+            document.getElementById('webhookConfig').style.display = 'none';
+
+            // 显示对应配置
+            if (triggerType === 'SCHEDULED') {
+                document.getElementById('scheduleConfig').style.display = 'block';
+            } else if (triggerType === 'WEBHOOK') {
+                document.getElementById('webhookConfig').style.display = 'block';
+            }
+        }
+
+        function showTab(tabName) {
+            // 隐藏所有标签页
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // 显示选中标签页
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 其他简化的JavaScript函数...
+    </script>
+</body>
+
+</html>
